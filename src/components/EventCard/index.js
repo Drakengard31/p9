@@ -11,9 +11,8 @@ const EventCard = ({
                        small = false,
                        ...props
                    }) => {
-    //  On gère la date ici de manière plus robuste
-    // Si date n'existe pas ou n'est pas une Date valide, on utilise new Date()
-    const eventDate = (date instanceof Date && !isNaN(date)) ? date : new Date();
+    // Et une vérification plus propre pour les dates invalides
+    const eventDate = (date instanceof Date && !Number.isNaN(date.getTime())) ? date : new Date();
 
     return (
         <div
@@ -35,7 +34,7 @@ const EventCard = ({
                     className="EventCard__month"
                     data-testid="event-month"
                 >
-                    {/*: On utilise notre eventDate vérifiée */}
+                    {/* On utilise notre eventDate vérifiée */}
                     {getMonth(eventDate)}
                 </div>
             </div>
