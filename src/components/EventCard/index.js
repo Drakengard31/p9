@@ -11,8 +11,26 @@ const EventCard = ({
                        small = false,
                        ...props
                    }) => {
-    // Et une vérification plus propre pour les dates invalides
-    const eventDate = (date instanceof Date && !Number.isNaN(date.getTime())) ? date : new Date();
+    //  Meilleure gestion des dates
+    const getValidDate = (inputDate) => {
+        // Si c'est déjà une Date valide, on la retourne
+        if (inputDate instanceof Date && !Number.isNaN(inputDate.getTime())) {
+            return inputDate;
+        }
+
+        // Si c'est une string, on essaie de la convertir
+        if (typeof inputDate === 'string' && inputDate.trim() !== '') {
+            const parsedDate = new Date(inputDate);
+            if (!Number.isNaN(parsedDate.getTime())) {
+                return parsedDate;
+            }
+        }
+
+        // Si rien ne marche, on retourne null (pas de date par défaut)
+        return null;
+    };
+
+    const eventDate = getValidDate(date);
 
     return (
         <div
@@ -34,8 +52,8 @@ const EventCard = ({
                     className="EventCard__month"
                     data-testid="event-month"
                 >
-                    {/* On utilise notre eventDate vérifiée */}
-                    {getMonth(eventDate)}
+                    {/* Affiche le mois seulement si on a une date valide */}
+                    {eventDate ? getMonth(eventDate) : ''}
                 </div>
             </div>
         </div>
@@ -45,7 +63,11 @@ const EventCard = ({
 EventCard.propTypes = {
     imageSrc: PropTypes.string.isRequired,
     imageAlt: PropTypes.string,
-    date: PropTypes.instanceOf(Date),
+    // Accepte aussi les strings pour les dates
+    date: PropTypes.oneOfType([
+        PropTypes.instanceOf(Date),
+        PropTypes.string
+    ]),
     title: PropTypes.string.isRequired,
     small: PropTypes.bool,
     label: PropTypes.string.isRequired,
@@ -54,7 +76,7 @@ EventCard.propTypes = {
 EventCard.defaultProps = {
     imageAlt: "image",
     small: false,
-    date: new Date(),
+    date: null,
 };
 
 export default EventCard;
