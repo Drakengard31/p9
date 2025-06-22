@@ -14,11 +14,11 @@ describe("When Form is created", () => {
     it("the success message is displayed", async () => {
       render(<Home />);
       fireEvent(
-        await screen.findByText("Envoyer"),
-        new MouseEvent("click", {
-          cancelable: true,
-          bubbles: true,
-        })
+          await screen.findByText("Envoyer"),
+          new MouseEvent("click", {
+            cancelable: true,
+            bubbles: true,
+          })
       );
       await screen.findByText("En cours");
       await screen.findByText("Message envoyé !");

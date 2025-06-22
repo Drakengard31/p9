@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 describe("Date helper", () => {

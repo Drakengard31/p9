@@ -11,7 +11,7 @@ const data = {
       title: "Conférence #productCON",
       cover: "/images/stem-list-EVgsAbL51Rk-unsplash.png",
       description:
-        "Présentation des outils analytics aux professionnels du secteur",
+          "Présentation des outils analytics aux professionnels du secteur",
       nb_guesses: 1300,
       periode: "24-25-26 Février",
       prestations: [
@@ -29,7 +29,7 @@ const data = {
       title: "Forum #productCON",
       cover: "/images/stem-list-EVgsAbL51Rk-unsplash.png",
       description:
-        "Présentation des outils analytics aux professionnels du secteur",
+          "Présentation des outils analytics aux professionnels du secteur",
       nb_guesses: 1300,
       periode: "24-25-26 Février",
       prestations: ["1 espace d’exposition", "1 scéne principale"],
@@ -41,9 +41,9 @@ describe("When Events is created", () => {
   it("a list of event card is displayed", async () => {
     api.loadData = jest.fn().mockReturnValue(data);
     render(
-      <DataProvider>
-        <Events />
-      </DataProvider>
+        <DataProvider>
+          <Events />
+        </DataProvider>
     );
     await screen.findByText("avril");
   });
@@ -51,9 +51,9 @@ describe("When Events is created", () => {
     it("an error message is displayed", async () => {
       api.loadData = jest.fn().mockRejectedValue();
       render(
-        <DataProvider>
-          <Events />
-        </DataProvider>
+          <DataProvider>
+            <Events />
+          </DataProvider>
       );
       expect(await screen.findByText("An error occured")).toBeInTheDocument();
     });
@@ -62,24 +62,24 @@ describe("When Events is created", () => {
     it.only("an filtered list is displayed", async () => {
       api.loadData = jest.fn().mockReturnValue(data);
       render(
-        <DataProvider>
-          <Events />
-        </DataProvider>
+          <DataProvider>
+            <Events />
+          </DataProvider>
       );
       await screen.findByText("Forum #productCON");
       fireEvent(
-        await screen.findByTestId("collapse-button-testid"),
-        new MouseEvent("click", {
-          cancelable: true,
-          bubbles: true,
-        })
+          await screen.findByTestId("collapse-button-testid"),
+          new MouseEvent("click", {
+            cancelable: true,
+            bubbles: true,
+          })
       );
       fireEvent(
-        (await screen.findAllByText("soirée entreprise"))[0],
-        new MouseEvent("click", {
-          cancelable: true,
-          bubbles: true,
-        })
+          (await screen.findAllByText("soirée entreprise"))[0],
+          new MouseEvent("click", {
+            cancelable: true,
+            bubbles: true,
+          })
       );
 
       await screen.findByText("Conférence #productCON");
@@ -91,17 +91,17 @@ describe("When Events is created", () => {
     it("the event detail is displayed", async () => {
       api.loadData = jest.fn().mockReturnValue(data);
       render(
-        <DataProvider>
-          <Events />
-        </DataProvider>
+          <DataProvider>
+            <Events />
+          </DataProvider>
       );
 
       fireEvent(
-        await screen.findByText("Conférence #productCON"),
-        new MouseEvent("click", {
-          cancelable: true,
-          bubbles: true,
-        })
+          await screen.findByText("Conférence #productCON"),
+          new MouseEvent("click", {
+            cancelable: true,
+            bubbles: true,
+          })
       );
 
       await screen.findByText("24-25-26 Février");
