@@ -69,11 +69,6 @@ const EventList = () => {
                   }}
               />
 
-              {/* Debug: afficher le type actuel */}
-              <div style={{color: 'red', padding: '10px'}}>
-                DEBUG - Type actuel: {type || 'null'} |
-                Nombre d’événements filtrés: {eventsByType.length}
-              </div>
 
               <div id="events" className="ListContainer">
                 {filteredEvents.map((event) => (
