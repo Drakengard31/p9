@@ -14,32 +14,36 @@ const EventList = () => {
   const [type, setType] = useState();
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Debug: afficher les types disponibles
+  const typeList = new Set(data?.events?.map((event) => event.type) || []);
+  console.log('Available types:', Array.from(typeList));
+  console.log('Current type state:', type);
+
   // D'abord filtrer par type, puis par pagination
   const eventsByType = !type
-      ? data?.events || []  // Tous les événements si pas de type
+      ? data?.events || []  // Tous les événements si pas de type sélectionné
       : (data?.events || []).filter((event) => event.type === type); // Filtrer par type
+
+  console.log('Events by type:', eventsByType.length, 'events');
 
   // Ensuite appliquer la pagination sur les événements filtrés
   const filteredEvents = eventsByType.filter((event, index) => {
-    if (
-        (currentPage - 1) * PER_PAGE <= index &&
-        PER_PAGE * currentPage > index
-    ) {
-      return true;
-    }
-    return false;
+    const startIndex = (currentPage - 1) * PER_PAGE;
+    const endIndex = PER_PAGE * currentPage;
+    return index >= startIndex && index < endIndex;
   });
 
   const changeType = (evtType) => {
-    setCurrentPage(1);
+    console.log('Changing type to:', evtType); // Debug
+    setCurrentPage(1); // Reset à la page 1 quand on change de type
     setType(evtType);
   };
 
   // Calculer le nombre de pages basé sur les événements filtrés par type
-  const pageNumber = Math.floor((eventsByType?.length || 0) / PER_PAGE) + 1;
+  const pageNumber = Math.ceil((eventsByType?.length || 0) / PER_PAGE);
 
-  // Vérifier que data?.events existe avant de mapper
-  const typeList = new Set(data?.events?.map((event) => event.type) || []);
+  const selectionOptions = ["Tous", ...Array.from(typeList)];
+  console.log('Selection options:', selectionOptions);
 
   return (
       <>
@@ -51,9 +55,26 @@ const EventList = () => {
               <h3 className="SelectTitle">Catégories</h3>
               <Select
                   aria-label="Catégories"
-                  selection={Array.from(typeList)}
-                  onChange={(value) => (value ? changeType(value) : changeType(null))}
+                  selection={selectionOptions}
+                  value={type || "Tous"} // Valeur actuelle du select
+                  onChange={(value) => {
+                    console.log('Select onChange called with:', value, typeof value); // Debug
+                    console.log('Is value "soirée entreprise"?', value === "soirée entreprise");
+                    // Gérer le cas "Tous" et les valeurs nulles
+                    if (value === "Tous" || !value) {
+                      changeType(null); // null = tous les événements
+                    } else {
+                      changeType(value);
+                    }
+                  }}
               />
+
+              {/* Debug: afficher le type actuel */}
+              <div style={{color: 'red', padding: '10px'}}>
+                DEBUG - Type actuel: {type || 'null'} |
+                Nombre d'événements filtrés: {eventsByType.length}
+              </div>
+
               <div id="events" className="ListContainer">
                 {filteredEvents.map((event) => (
                     <Modal key={event.id} Content={<ModalEvent event={event} />}>
@@ -62,6 +83,7 @@ const EventList = () => {
                               onClick={() => setIsOpened(true)}
                               imageSrc={event.cover}
                               title={event.title}
+                              // Convertir la date en objet Date avant de la passer
                               date={new Date(event.date)}
                               label={event.type}
                           />
@@ -70,10 +92,16 @@ const EventList = () => {
                 ))}
               </div>
               <div className="Pagination">
-                {[...Array(pageNumber || 0)].map((_, n) => (
-                    // eslint-disable-next-line react/no-array-index-key
-                    <a key={n} href="#events" onClick={() => setCurrentPage(n + 1)}>
-                      {n + 1}
+                {/* Affiche la pagination seulement s'il y a plus d'une page */}
+                {pageNumber > 1 && Array.from({ length: pageNumber }, (_, i) => i + 1).map((pageNum) => (
+                    <a
+                        key={`page-${pageNum}`}
+                        href="#events"
+                        onClick={() => setCurrentPage(pageNum)}
+                        // Ajoute une classe pour la page active
+                        className={currentPage === pageNum ? "active" : ""}
+                    >
+                      {pageNum}
                     </a>
                 ))}
               </div>
