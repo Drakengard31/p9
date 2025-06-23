@@ -117,9 +117,9 @@ const Page = () => {
       <div className="col presta">
         <h3>Notre derniére prestation</h3>
         <EventCard
-            imageSrc={last?.cover || "/default-image.png"} // Ajout d'une valeur par défaut
-            title={last?.title || "Titre par défaut"} // Ajout d'une valeur par défaut
-            date={last?.date ? new Date(last.date) : new Date()} // Gestion du cas undefined
+            imageSrc={last?.cover }
+            title={last?.title }
+            date={last?.date }
           small
           label="boom"
         />

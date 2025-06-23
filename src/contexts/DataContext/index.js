@@ -30,6 +30,8 @@ export const DataProvider = ({ children }) => {
     if (data) return;
     getData();
   });
+  // recuperation du dernier evenement
+  const last = data?.events && data.events.length > 0 ? data.events[data.events.length - 1] : null;
   
   return (
     <DataContext.Provider
@@ -37,6 +39,7 @@ export const DataProvider = ({ children }) => {
       value={{
         data,
         error,
+        last,
       }}
     >
       {children}
