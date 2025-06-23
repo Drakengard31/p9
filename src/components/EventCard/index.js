@@ -13,7 +13,6 @@ const EventCard = ({
                    }) => {
     //  Meilleure gestion des dates
     const getValidDate = (inputDate) => {
-        console.log('inputDate:', inputDate, typeof inputDate, inputDate instanceof Date);
         // Si c'est déjà une Date valide, on la retourne
         if (inputDate instanceof Date && !Number.isNaN(inputDate.getTime())) {
             return inputDate;
@@ -28,7 +27,6 @@ const EventCard = ({
         }
 
         // Si rien ne marche, on retourne null (pas de date par défaut)
-        console.log('Aucune date valide, retour null')
         return null;
     };
 
